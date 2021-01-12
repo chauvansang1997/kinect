@@ -2,13 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="156646bd-fecc-44d3-8876-7be1a6ec2dcd" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config_kinect.ini" beforeDir="false" afterPath="$PROJECT_DIR$/config_kinect.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configure.py" beforeDir="false" afterPath="$PROJECT_DIR$/configure.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blob.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/blob.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/first_depth.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kinect_worker.py" beforeDir="false" afterPath="$PROJECT_DIR$/kinect_worker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/subtracted.txt" beforeDir="false" afterPath="$PROJECT_DIR$/subtracted.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transform.txt" beforeDir="false" afterPath="$PROJECT_DIR$/transform.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/first_depth_edit.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/first_depth_edit1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/first_depth_edit_2.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/khanh.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_old.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/multiframe_listener.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_depth.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/udp_server.py" beforeDir="false" afterPath="$PROJECT_DIR$/udp_server.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -460,7 +466,7 @@
       <workItem from="1610378990052" duration="320000" />
       <workItem from="1610379481916" duration="475000" />
       <workItem from="1610382884330" duration="575000" />
-      <workItem from="1610463063721" duration="4968000" />
+      <workItem from="1610463063721" duration="5307000" />
     </task>
     <servers />
   </component>
