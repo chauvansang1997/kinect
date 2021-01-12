@@ -9,6 +9,8 @@ from pylibfreenect2 import createConsoleLogger, setGlobalLogger
 
 class KinectWorker:
     def __init__(self, configure, queue):
+        self.listener = SyncMultiFrameListener(
+            FrameType.Color | FrameType.Ir | FrameType.Depth)
         self.available_data = False
         self.close = False
         self.configure = configure
@@ -60,8 +62,8 @@ class KinectWorker:
                 self.index = self.index % 4
 
         cv2.namedWindow('track')
-        cv2.namedWindow('current depth')
-        cv2.setMouseCallback('current depth', change_warp_points)
+        cv2.namedWindow('color')
+        cv2.setMouseCallback('color', change_warp_points)
         cv2.createTrackbar('min_depth', 'track', 0, 4500, change_min_depth)
         cv2.createTrackbar('area', 'track', 0, 4500, change_area)
         cv2.createTrackbar('max_depth', 'track', 0, 4500, change_max_depth)
@@ -71,17 +73,18 @@ class KinectWorker:
         cv2.setTrackbarPos('max_depth', 'track', self.max_depth)
         cv2.setTrackbarPos('kernel', 'track', self.kernel)
         cv2.setTrackbarPos('area', 'track', self.area)
-
         try:
             from pylibfreenect2 import OpenGLPacketPipeline
             pipeline = OpenGLPacketPipeline()
 
-        except:
+        except Exception as e:
+            print(e)
             try:
                 from pylibfreenect2 import OpenCLPacketPipeline
                 pipeline = OpenCLPacketPipeline()
 
-            except:
+            except Exception as e:
+                print(e)
                 from pylibfreenect2 import CpuPacketPipeline
                 pipeline = CpuPacketPipeline()
         print("Packet pipeline:", type(pipeline).__name__)
@@ -98,9 +101,6 @@ class KinectWorker:
 
         serial = fn.getDeviceSerialNumber(0)
         self.device = fn.openDevice(serial, pipeline=pipeline)
-
-        self.listener = SyncMultiFrameListener(
-            FrameType.Color | FrameType.Ir | FrameType.Depth)
 
         # Register listeners
         self.device.setColorFrameListener(self.listener)
@@ -150,14 +150,10 @@ class KinectWorker:
             depth = depth.asarray()
 
             cv2.imshow('color', self.registered.asarray(np.uint8))
-            # cv2.imshow('self.first_depth ', self.first_depth )
+
             if self.first_depth is None:
                 self.first_depth = depth.copy()
                 np.savetxt('first_depth.txt', self.first_depth)
-            # min_depth = cv2.getTrackbarPos('min_depth', 'track')
-            # max_depth = cv2.getTrackbarPos('max_depth', 'track')
-            # kernel = cv2.getTrackbarPos('kernel', 'track')
-            # area = cv2.getTrackbarPos('area', 'track')
 
             new_depth = self.first_depth - depth
 
@@ -168,11 +164,13 @@ class KinectWorker:
                                                         [512, 424]]))
 
             new_depth = cv2.warpPerspective(new_depth, M, (512, 424))
+            color_depth = cv2.warpPerspective(self.registered.asarray(np.uint8), M, (512, 424))
             subtracted = new_depth
             _, new_depth = cv2.threshold(new_depth, 90, 255, cv2.THRESH_BINARY)
             cv2.imshow('current depth', depth / 4500.)
 
-            # cv2.imshow("subtracted depth", new_depth)
+            cv2.imshow("subtracted depth", new_depth)
+            cv2.imshow("color depth", color_depth)
 
             image = new_depth
 
@@ -185,22 +183,24 @@ class KinectWorker:
             image = cv2.morphologyEx(image, cv2.MORPH_OPEN, kernel)
 
             image = cv2.flip(image, 0)
-
+            _, image = cv2.threshold(image, 90, 255, cv2.THRESH_BINARY_INV)
             key_points = detector.detect(image)
 
             values = []
             # self.queue.put('test')
             for keypoint in key_points:
+                if subtracted[int(keypoint.pt[1])][int(keypoint.pt[0])] <= self.min_depth:
+                    value = {'y': keypoint.pt[1],
+                             'x': keypoint.pt[0],
+                             'size': keypoint.size}
+                    values.append(value)
+                # value = {'y': keypoint.pt[1],
+                #          'x': keypoint.pt[0],
+                #          'size': keypoint.size}
+                # values.append(value)
                 print(subtracted[int(keypoint.pt[1])][int(keypoint.pt[0])])
-                value = {'y': keypoint.pt[1],
-                         'x': keypoint.pt[0],
-                         'size': keypoint.size}
-                values.append(value)
-
             if len(key_points) != 0:
                 self.queue.put(json.dumps(values))
-
-            _, image = cv2.threshold(image, 90, 255, cv2.THRESH_BINARY_INV)
 
             im_with_key_points = cv2.drawKeypoints(image, key_points, np.array([]),
                                                    (0, 255, 0),

@@ -2,19 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="156646bd-fecc-44d3-8876-7be1a6ec2dcd" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/blob.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/blob.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/edit_depth.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/udp_server.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config_kinect.ini" beforeDir="false" afterPath="$PROJECT_DIR$/config_kinect.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/configure.py" beforeDir="false" afterPath="$PROJECT_DIR$/configure.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/first_depth.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/khanh.py" beforeDir="false" afterPath="$PROJECT_DIR$/khanh.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kinect_server.py" beforeDir="false" afterPath="$PROJECT_DIR$/kinect_server.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kinect_worker.py" beforeDir="false" afterPath="$PROJECT_DIR$/kinect_worker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_depth.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_depth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/subtracted.txt" beforeDir="false" afterPath="$PROJECT_DIR$/subtracted.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/transform.txt" beforeDir="false" afterPath="$PROJECT_DIR$/transform.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -458,7 +451,16 @@
       <workItem from="1610263711434" duration="650000" />
       <workItem from="1610264636081" duration="102000" />
       <workItem from="1610264785273" duration="1079000" />
-      <workItem from="1610265906855" duration="4718000" />
+      <workItem from="1610265906855" duration="5174000" />
+      <workItem from="1610291243225" duration="1411000" />
+      <workItem from="1610369677054" duration="4377000" />
+      <workItem from="1610377071657" duration="48000" />
+      <workItem from="1610377198080" duration="109000" />
+      <workItem from="1610377430755" duration="1486000" />
+      <workItem from="1610378990052" duration="320000" />
+      <workItem from="1610379481916" duration="475000" />
+      <workItem from="1610382884330" duration="575000" />
+      <workItem from="1610463063721" duration="4968000" />
     </task>
     <servers />
   </component>
@@ -507,7 +509,7 @@
     <SUITE FILE_PATH="coverage/kinect_server$test_depth.coverage" NAME="test_depth Coverage Results" MODIFIED="1607154497745" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kinect_client$main.coverage" NAME="main Coverage Results" MODIFIED="1606046982632" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kinect_client$multiframe_listener.coverage" NAME="multiframe_listener Coverage Results" MODIFIED="1605406539675" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/kinect_server$main.coverage" NAME="main Coverage Results" MODIFIED="1610269931876" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/kinect_server$main.coverage" NAME="main Coverage Results" MODIFIED="1610467574179" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kinect_server$khanh.coverage" NAME="khanh Coverage Results" MODIFIED="1606222647396" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kinect_server$kinect_worker.coverage" NAME="kinect_worker Coverage Results" MODIFIED="1607152752375" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kinect_server$edit_depth.coverage" NAME="edit_depth Coverage Results" MODIFIED="1607155073586" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

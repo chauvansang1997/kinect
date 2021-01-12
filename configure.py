@@ -25,6 +25,7 @@ class Configure:
             top_secret['kernel'] = '0'
             top_secret['kinect_id'] = '0'
             top_secret['port'] = '8080'
+            top_secret['kinect_id'] = '0'
             with open('config_kinect.ini', 'w') as configfile:
                 self.config.write(configfile)
         else:
@@ -36,3 +37,4 @@ class Configure:
             self.kernel = self.config['server.com']['kernel']
             self.kinect_id = self.config['server.com']['kinect_id']
             self.port = int(self.config['server.com']['port'])
+            self.kinect_id = self.config['server.com']['kinect_id']
