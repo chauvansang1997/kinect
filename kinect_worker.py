@@ -61,18 +61,18 @@ class KinectWorker:
                 self.index = self.index + 1
                 self.index = self.index % 4
 
-        cv2.namedWindow('track')
-        cv2.namedWindow('color')
-        cv2.setMouseCallback('color', change_warp_points)
-        cv2.createTrackbar('min_depth', 'track', 0, 4500, change_min_depth)
-        cv2.createTrackbar('area', 'track', 0, 4500, change_area)
-        cv2.createTrackbar('max_depth', 'track', 0, 4500, change_max_depth)
-        cv2.createTrackbar('kernel', 'track', 0, 15, change_kernel)
-
-        cv2.setTrackbarPos('min_depth', 'track', self.min_depth)
-        cv2.setTrackbarPos('max_depth', 'track', self.max_depth)
-        cv2.setTrackbarPos('kernel', 'track', self.kernel)
-        cv2.setTrackbarPos('area', 'track', self.area)
+        # cv2.namedWindow('track')
+        # cv2.namedWindow('color')
+        # cv2.setMouseCallback('color', change_warp_points)
+        # cv2.createTrackbar('min_depth', 'track', 0, 4500, change_min_depth)
+        # cv2.createTrackbar('area', 'track', 0, 4500, change_area)
+        # cv2.createTrackbar('max_depth', 'track', 0, 4500, change_max_depth)
+        # cv2.createTrackbar('kernel', 'track', 0, 15, change_kernel)
+        #
+        # cv2.setTrackbarPos('min_depth', 'track', self.min_depth)
+        # cv2.setTrackbarPos('max_depth', 'track', self.max_depth)
+        # cv2.setTrackbarPos('kernel', 'track', self.kernel)
+        # cv2.setTrackbarPos('area', 'track', self.area)
         try:
             from pylibfreenect2 import OpenGLPacketPipeline
             pipeline = OpenGLPacketPipeline()
