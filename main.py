@@ -2,7 +2,7 @@ from queue import Queue
 
 from configure import Configure
 from kinect_worker import KinectWorker
-from udp_server import KinectWebSocket
+from udp_client import KinectWebSocket
 
 if __name__ == "__main__":
     configure = Configure()
