@@ -84,6 +84,7 @@ class Configure:
                         (self.height / self.grid_size_y)
                     grid_transform.append([x, y])
 
+                grid_transform = np.asarray(grid_transform)
                 np.savetxt("grid_transforms_{0}.txt".format(port), grid_transform)
                 self.grid_transforms.append(grid_transform)
 
