@@ -8,7 +8,7 @@ from pylibfreenect2 import createConsoleLogger, setGlobalLogger
 
 
 class KinectWorker:
-    def __init__(self, configure, queue):
+    def __init__(self, configure, image_queue, detect_queue):
         self.listener = SyncMultiFrameListener(
             FrameType.Color | FrameType.Ir | FrameType.Depth)
         self.available_data = False
@@ -22,57 +22,31 @@ class KinectWorker:
         self.area = int(configure.area)
 
         self.index = 0
-        self.queue = queue
+        self.queues = configure.queues
+        self.detect_queue = detect_queue
+        self.image_queue = image_queue
         self.transform = configure.transform
-        self.top_left = [0, 0]
-        self.top_right = [512, 0]
-        self.bottom_left = [0, 424]
-        self.bottom_right = [512, 424]
 
     def run(self):
-
         configure = self.configure
+        width = configure.width
+        height = configure.height
 
-        def change_min_depth(x):
-            configure.config['server.com']['min_depth'] = str(x)
-            with open('config_kinect.ini', 'w') as configfile:
-                configure.config.write(configfile)
+        grid_size_list_x = configure.grid_size_list_x
+        grid_size_list_y = configure.grid_size_list_y
+        grid_transforms = configure.grid_transforms
+        base_grid_transform = configure.base_grid_transform
+        number_point_list_x = []
+        number_point_list_y = []
+        item_width_list = []
+        item_height_list = []
 
-        def change_max_depth(x):
-            configure.config['server.com']['max_depth'] = str(x)
-            with open('config_kinect.ini', 'w') as configfile:
-                configure.config.write(configfile)
+        for i in range(0, len(grid_size_list_x)):
+            number_point_list_x.append(grid_size_list_x[i] + 1)
+            number_point_list_y.append(grid_size_list_y[i] + 1)
+            item_width_list.append(int(width / grid_size_list_x[i]))
+            item_height_list.append(int(height / grid_size_list_y[i]))
 
-        def change_kernel(x):
-            configure.config['server.com']['kernel'] = str(x)
-            with open('config_kinect.ini', 'w') as configfile:
-                configure.config.write(configfile)
-
-        def change_area(x):
-            configure.config['server.com']['area'] = str(x)
-            with open('config_kinect.ini', 'w') as configfile:
-                configure.config.write(configfile)
-
-        def change_warp_points(event, x, y, flags, param):
-            if event == cv2.EVENT_LBUTTONUP:
-                self.transform[self.index] = [x, y]
-                print([x, y])
-                np.savetxt("transform.txt", self.transform)
-                self.index = self.index + 1
-                self.index = self.index % 4
-
-        # cv2.namedWindow('track')
-        # cv2.namedWindow('color')
-        # cv2.setMouseCallback('color', change_warp_points)
-        # cv2.createTrackbar('min_depth', 'track', 0, 4500, change_min_depth)
-        # cv2.createTrackbar('area', 'track', 0, 4500, change_area)
-        # cv2.createTrackbar('max_depth', 'track', 0, 4500, change_max_depth)
-        # cv2.createTrackbar('kernel', 'track', 0, 15, change_kernel)
-        #
-        # cv2.setTrackbarPos('min_depth', 'track', self.min_depth)
-        # cv2.setTrackbarPos('max_depth', 'track', self.max_depth)
-        # cv2.setTrackbarPos('kernel', 'track', self.kernel)
-        # cv2.setTrackbarPos('area', 'track', self.area)
         try:
             from pylibfreenect2 import OpenGLPacketPipeline
             pipeline = OpenGLPacketPipeline()
@@ -155,66 +129,100 @@ class KinectWorker:
                 self.first_depth = depth.copy()
                 np.savetxt('first_depth.txt', self.first_depth)
 
+            color_depth = self.registered.asarray(np.uint8)
             new_depth = self.first_depth - depth
 
-            M = cv2.getPerspectiveTransform(self.transform,
-                                            np.float32([[0, 0],
-                                                        [512, 0],
-                                                        [0, 424],
-                                                        [512, 424]]))
+            if self.configure.update:
+                self.configure.update = False
+                grid_transforms = self.configure.grid_transforms
 
-            new_depth = cv2.warpPerspective(new_depth, M, (512, 424))
-            color_depth = cv2.warpPerspective(self.registered.asarray(np.uint8), M, (512, 424))
-            subtracted = new_depth
-            _, new_depth = cv2.threshold(new_depth, 90, 255, cv2.THRESH_BINARY)
-            cv2.imshow('current depth', depth / 4500.)
+            self.image_queue.put(color_depth)
+            for i in range(0, configure.server_ips):
+                row_pixel = []
+                color_row_pixel = []
+                grid_transform = grid_transforms[i]
+                for row in range(0, grid_size_list_x[i]):
+                    column_pixel = []
+                    color_column_pixel = []
+                    for column in range(0, grid_size_list_y[i]):
+                        index1 = column * number_point_list_x[i] + row
+                        index2 = column * number_point_list_x[i] + row + 1
+                        index3 = (column + 1) * number_point_list_x[i] + row
+                        index4 = (column + 1) * number_point_list_x[i] + row + 1
 
-            cv2.imshow("subtracted depth", new_depth)
-            cv2.imshow("color depth", color_depth)
+                        m = cv2.getPerspectiveTransform(
+                            np.float32(
+                                [(grid_transforms[index1][0], grid_transform[index1][1]),
+                                 (grid_transform[index2][0], grid_transform[index2][1]),
+                                 (grid_transform[index3][0], grid_transform[index3][1]),
+                                 (grid_transform[index4][0], grid_transform[index4][1])]),
+                            np.float32(
+                                [(0, 0),
+                                 (item_width_list[i], 0),
+                                 (0, item_height_list[i]),
+                                 (item_width_list[i], item_height_list[i])]
+                            ),
+                        )
+                        m2 = cv2.warpPerspective(new_depth, m, (item_width_list[i], item_height_list[i]))
+                        m1 = cv2.warpPerspective(color_depth, m, (item_width_list[i], item_height_list[i]))
+                        if column == 0:
+                            column_pixel = m2
+                            color_column_pixel = m1
+                        else:
+                            column_pixel = np.concatenate((column_pixel, m2), axis=0)
+                            color_column_pixel = np.concatenate((color_column_pixel, m1), axis=0)
 
-            image = new_depth
+                    if row == 0:
+                        row_pixel = column_pixel
+                        color_row_pixel = color_column_pixel
+                    else:
+                        row_pixel = np.concatenate((row_pixel, column_pixel), axis=1)
+                        color_row_pixel = np.concatenate((color_row_pixel, color_column_pixel), axis=1)
 
-            image = image.astype(np.uint8)
+                new_depth_index = row_pixel
+                subtracted = new_depth_index
+                cv2.imshow('color_row_pixel'.format(i), color_row_pixel)
 
-            image = cv2.bilateralFilter(image, 11, 17, 17)
+                _, new_depth_index = cv2.threshold(new_depth_index, 90, 255, cv2.THRESH_BINARY)
 
-            kernel = np.ones((self.kernel, self.kernel), np.uint8)
+                image = new_depth_index
 
-            image = cv2.morphologyEx(image, cv2.MORPH_OPEN, kernel)
+                image = image.astype(np.uint8)
 
-            image = cv2.flip(image, 0)
-            _, image = cv2.threshold(image, 90, 255, cv2.THRESH_BINARY_INV)
-            key_points = detector.detect(image)
+                image = cv2.bilateralFilter(image, 11, 17, 17)
 
-            values = []
-            # self.queue.put('test')
-            for keypoint in key_points:
-                if subtracted[int(keypoint.pt[1])][int(keypoint.pt[0])] <= self.min_depth:
-                    value = {'y': keypoint.pt[1],
-                             'x': keypoint.pt[0],
-                             'size': keypoint.size}
-                    values.append(value)
-                # value = {'y': keypoint.pt[1],
-                #          'x': keypoint.pt[0],
-                #          'size': keypoint.size}
-                # values.append(value)
-                print(subtracted[int(keypoint.pt[1])][int(keypoint.pt[0])])
-            if len(key_points) != 0:
-                self.queue.put(json.dumps(values))
+                kernel = np.ones((self.kernel, self.kernel), np.uint8)
 
-            im_with_key_points = cv2.drawKeypoints(image, key_points, np.array([]),
-                                                   (0, 255, 0),
-                                                   cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+                image = cv2.morphologyEx(image, cv2.MORPH_OPEN, kernel)
 
-            cv2.imshow("key_points", im_with_key_points)
+                image = cv2.flip(image, 0)
 
-            cv2.imshow("image", image)
+                _, image = cv2.threshold(image, 90, 255, cv2.THRESH_BINARY_INV)
+
+                key_points = detector.detect(image)
+                values = []
+
+                for keypoint in key_points:
+                    if subtracted[int(keypoint.pt[1])][int(keypoint.pt[0])] <= self.min_depth:
+                        value = {'y': keypoint.pt[1],
+                                 'x': self.configure.width - keypoint.pt[0],
+                                 'size': keypoint.size}
+                        values.append(value)
+
+                    print(subtracted[int(keypoint.pt[1])][int(keypoint.pt[0])])
+
+                self.queues[i].put(json.dumps(values))
+                im_with_key_points = cv2.drawKeypoints(image, key_points, np.array([]),
+                                                       (0, 255, 0),
+                                                       cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+
+                cv2.imshow("key_points", im_with_key_points)
+                # self.detect_queue.put(im_with_key_points)
 
             self.listener.release(frames)
 
             key = cv2.waitKey(delay=1)
-            if key == ord('k'):
-                np.savetxt('subtracted.txt', image)
+
             if key == ord('q'):
                 break
 

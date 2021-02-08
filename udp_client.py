@@ -3,12 +3,13 @@ import threading
 
 
 class KinectWebSocket(threading.Thread):
-    def __init__(self, queue, configure):
+    def __init__(self, index, configure):
         super().__init__()
         self.connected = set()
-        self.queue = queue
-        self.server_ip = configure.server_ip
-        self.port = configure.port
+        self.index = index
+        self.server_ip = configure.server_ips[index]
+        self.port = configure.ports[index]
+        self.queue = configure.queues[index]
 
     async def handler(self, websocket, path):
         self.connected.add(websocket)
