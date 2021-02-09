@@ -35,7 +35,7 @@ class KinectWorker:
         grid_size_list_x = configure.grid_size_list_x
         grid_size_list_y = configure.grid_size_list_y
         grid_transforms = configure.grid_transforms
-        base_grid_transform = configure.base_grid_transform
+
         number_point_list_x = []
         number_point_list_y = []
         item_width_list = []
@@ -152,7 +152,7 @@ class KinectWorker:
 
                         m = cv2.getPerspectiveTransform(
                             np.float32(
-                                [(grid_transforms[index1][0], grid_transform[index1][1]),
+                                [(grid_transform[index1][0], grid_transform[index1][1]),
                                  (grid_transform[index2][0], grid_transform[index2][1]),
                                  (grid_transform[index3][0], grid_transform[index3][1]),
                                  (grid_transform[index4][0], grid_transform[index4][1])]),
