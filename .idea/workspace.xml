@@ -2,17 +2,33 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="156646bd-fecc-44d3-8876-7be1a6ec2dcd" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/client_kinect.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config_send_udp_socket.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frame_segment_udp.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sender.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/base_grid_transform.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/config_kinect.ini" beforeDir="false" afterPath="$PROJECT_DIR$/config_kinect.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config_recv_socket.py" beforeDir="false" afterPath="$PROJECT_DIR$/config_recv_socket.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config_send_socket.py" beforeDir="false" afterPath="$PROJECT_DIR$/config_send_socket.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config_server.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configure.py" beforeDir="false" afterPath="$PROJECT_DIR$/configure.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/first_depth.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/grid_transform.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/grid_transforms_8000.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/grid_transforms_8001.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/grid_transforms_8002.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/kinect_server.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/kinect_worker.py" beforeDir="false" afterPath="$PROJECT_DIR$/kinect_worker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_config.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_config.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/server_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/server_config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/transform.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/transform_worker.py" beforeDir="false" afterPath="$PROJECT_DIR$/transform_worker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transform_worker.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/transform_worker2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/udp_client.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,25 +118,14 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\kinect_server_main" />
       <recent name="D:\kinect_server2" />
       <recent name="C:\Users\Dell 7470\Documents\kinect_client" />
       <recent name="C:\Users\User\Documents\kinect_calibration_opening - Copy" />
       <recent name="D:\kinect_calibration" />
-      <recent name="D:\PythonScript" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.main_config">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="Python.server_config">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="PythonScript" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -327,11 +332,11 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.main_config" />
         <item itemvalue="Python.server_config" />
+        <item itemvalue="Python.main" />
+        <item itemvalue="Python.main_config" />
         <item itemvalue="Python.configure" />
         <item itemvalue="Python.client" />
-        <item itemvalue="Python.main" />
       </list>
     </recent_temporary>
   </component>
@@ -507,7 +512,24 @@
       <workItem from="1612788189314" duration="10413000" />
       <workItem from="1612803592509" duration="2740000" />
       <workItem from="1612809585169" duration="1442000" />
-      <workItem from="1612828460338" duration="3430000" />
+      <workItem from="1612828460338" duration="3528000" />
+      <workItem from="1612849931726" duration="2159000" />
+      <workItem from="1612852177419" duration="382000" />
+      <workItem from="1612875165236" duration="2947000" />
+      <workItem from="1612878379556" duration="6193000" />
+      <workItem from="1612884837890" duration="4927000" />
+      <workItem from="1612894764124" duration="1319000" />
+      <workItem from="1612937156069" duration="783000" />
+      <workItem from="1612940915438" duration="7552000" />
+      <workItem from="1612973192532" duration="991000" />
+      <workItem from="1613004879162" duration="9714000" />
+      <workItem from="1613095422155" duration="6584000" />
+      <workItem from="1613581314457" duration="1183000" />
+      <workItem from="1613627801723" duration="598000" />
+      <workItem from="1613650642873" duration="12265000" />
+      <workItem from="1613735184945" duration="4846000" />
+      <workItem from="1613750122155" duration="1237000" />
+      <workItem from="1613777489224" duration="3765000" />
     </task>
     <servers />
   </component>
@@ -538,24 +560,19 @@
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/config_send_socket.py</url>
-          <line>25</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/config_send_socket.py</url>
-          <line>23</line>
-          <option name="timeStamp" value="5" />
+        <line-breakpoint enabled="true" suspend="NONE" type="python-line">
+          <url>file://$PROJECT_DIR$/kinect_worker.py</url>
+          <line>29</line>
+          <log-expression expression="height = configure.height&#10;&#10;        grid_size_list = configure.grid_size_list&#10;        grid_transforms = configure.grid_transforms&#10;        item_width_list = []&#10;        item_height_list = []&#10;        color_pixel_list = []&#10;        new_depth_list = []&#10;        color_row_pixel_list = []&#10;        row_pixel_list = []&#10;        for i in range(0, len(configure.clients)):&#10;            item_width_list.append(int(width / grid_size_list[i][0]))&#10;            item_height_list.append(int(height / grid_size_list[i][1]))&#10;            color_pixel_list.append([])&#10;            new_depth_list.append([])&#10;            color_row_pixel_list.append([])&#10;            row_pixel_list.append([])" language="Python" />
+          <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="frame" language="Python" />
-        <watch expression="parameter" language="Python" />
-        <watch expression="grid_transform[i][0]" language="Python" />
-        <watch expression="grid_transform[i][1]" language="Python" />
+        <watch expression="current_index" language="Python" />
+        <watch expression="(grid_size_list[current_server_index][0]                                                  * (grid_size_list[current_server_index][1] + 1)" language="Python" />
+        <watch expression="grid_size_list[current_server_index][0]                                                  * (grid_size_list[current_server_index][1] + 1)" language="Python" />
       </configuration>
     </watches-manager>
   </component>
@@ -565,21 +582,24 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/kinect_server$udp_server.coverage" NAME="udp_server Coverage Results" MODIFIED="1610167515408" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/kinect_server2$server_config.coverage" NAME="server_config Coverage Results" MODIFIED="1612794454564" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/kinect_server2$server_config.coverage" NAME="server_config Coverage Results" MODIFIED="1612877451870" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kinect_server2$main.coverage" NAME="main Coverage Results" MODIFIED="1610644376373" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kinect_client$multiframe_listener__1_.coverage" NAME="multiframe_listener Coverage Results" MODIFIED="1605618877804" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kinect_server$multiframe_listener__1_.coverage" NAME="multiframe_listener (1) Coverage Results" MODIFIED="1606218412651" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kinect_server$test_depth.coverage" NAME="test_depth Coverage Results" MODIFIED="1607154497745" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kinect_server2$test.coverage" NAME="test Coverage Results" MODIFIED="1612706050615" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/kinect_server_main$main.coverage" NAME="main Coverage Results" MODIFIED="1613657616463" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kinect_server2$client.coverage" NAME="client Coverage Results" MODIFIED="1612716391090" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kinect_client$main.coverage" NAME="main Coverage Results" MODIFIED="1606046982632" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kinect_client$multiframe_listener.coverage" NAME="multiframe_listener Coverage Results" MODIFIED="1605406539675" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kinect_server$main.coverage" NAME="main Coverage Results" MODIFIED="1610634968329" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/kinect_server2$main_config.coverage" NAME="main_config Coverage Results" MODIFIED="1612830685155" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/kinect_server2$main_config.coverage" NAME="main_config Coverage Results" MODIFIED="1612876936922" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kinect_server$khanh.coverage" NAME="khanh Coverage Results" MODIFIED="1606222647396" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kinect_server$kinect_worker.coverage" NAME="kinect_worker Coverage Results" MODIFIED="1607152752375" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kinect_server2$server.coverage" NAME="server Coverage Results" MODIFIED="1612718010856" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/kinect_server_main$server_config.coverage" NAME="server_config Coverage Results" MODIFIED="1613740570059" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kinect_client$kinect_server.coverage" NAME="kinect_server Coverage Results" MODIFIED="1605452626574" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/kinect_server_main$main_config.coverage" NAME="main_config Coverage Results" MODIFIED="1613008367681" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kinect_server2$server_config__1_.coverage" NAME="server_config (1) Coverage Results" MODIFIED="1612720127362" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kinect_server$edit_depth.coverage" NAME="edit_depth Coverage Results" MODIFIED="1607155073586" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>

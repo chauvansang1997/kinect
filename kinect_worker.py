@@ -17,7 +17,6 @@ class KinectWorker:
         self.min_depth = int(configure.min_depth)
         self.max_depth = int(configure.max_depth)
         self.kernel = int(configure.kernel)
-        self.kinect_id = configure.kinect_id
         self.first_depth = configure.first_depth
         self.area = int(configure.area)
 
@@ -25,28 +24,27 @@ class KinectWorker:
         self.queues = configure.queues
         self.detect_queue = detect_queue
         self.image_queue = image_queue
-        self.transform = configure.transform
 
     def run(self):
         configure = self.configure
         width = configure.width
         height = configure.height
 
-        grid_size_list_x = configure.grid_size_list_x
-        grid_size_list_y = configure.grid_size_list_y
+        grid_size_list = configure.grid_size_list
         grid_transforms = configure.grid_transforms
-
-        number_point_list_x = []
-        number_point_list_y = []
         item_width_list = []
         item_height_list = []
-
-        for i in range(0, len(grid_size_list_x)):
-            number_point_list_x.append(grid_size_list_x[i] + 1)
-            number_point_list_y.append(grid_size_list_y[i] + 1)
-            item_width_list.append(int(width / grid_size_list_x[i]))
-            item_height_list.append(int(height / grid_size_list_y[i]))
-
+        color_pixel_list = []
+        new_depth_list = []
+        color_row_pixel_list = []
+        row_pixel_list = []
+        for i in range(0, len(configure.clients)):
+            item_width_list.append(int(width / grid_size_list[i][0]))
+            item_height_list.append(int(height / grid_size_list[i][1]))
+            color_pixel_list.append([])
+            new_depth_list.append([])
+            color_row_pixel_list.append([])
+            row_pixel_list.append([])
         try:
             from pylibfreenect2 import OpenGLPacketPipeline
             pipeline = OpenGLPacketPipeline()
@@ -132,23 +130,42 @@ class KinectWorker:
             color_depth = self.registered.asarray(np.uint8)
             new_depth = self.first_depth - depth
 
+            if self.configure.reset:
+                grid_size_list = configure.grid_size_list
+                grid_transforms = configure.grid_transforms
+                item_width_list = []
+                item_height_list = []
+                color_pixel_list = []
+                new_depth_list = []
+                color_row_pixel_list = []
+                row_pixel_list = []
+                cv2.destroyAllWindows()
+                for i in range(0, len(configure.clients)):
+                    item_width_list.append(int(width / grid_size_list[i][0]))
+                    item_height_list.append(int(height / grid_size_list[i][1]))
+                    color_pixel_list.append([])
+                    new_depth_list.append([])
+                    color_row_pixel_list.append([])
+                    row_pixel_list.append([])
+                self.configure.reset = False
+
             if self.configure.update:
                 self.configure.update = False
                 grid_transforms = self.configure.grid_transforms
 
             self.image_queue.put(color_depth)
-            for i in range(0, configure.server_ips):
+            for i in range(0, len(configure.clients)):
                 row_pixel = []
                 color_row_pixel = []
                 grid_transform = grid_transforms[i]
-                for row in range(0, grid_size_list_x[i]):
+                for row in range(0, grid_size_list[i][0]):
                     column_pixel = []
                     color_column_pixel = []
-                    for column in range(0, grid_size_list_y[i]):
-                        index1 = column * number_point_list_x[i] + row
-                        index2 = column * number_point_list_x[i] + row + 1
-                        index3 = (column + 1) * number_point_list_x[i] + row
-                        index4 = (column + 1) * number_point_list_x[i] + row + 1
+                    for column in range(0, grid_size_list[i][1]):
+                        index1 = column * (grid_size_list[i][0] + 1) + row
+                        index2 = column * (grid_size_list[i][0] + 1) + row + 1
+                        index3 = (column + 1) * (grid_size_list[i][0] + 1) + row
+                        index4 = (column + 1) * (grid_size_list[i][0] + 1) + row + 1
 
                         m = cv2.getPerspectiveTransform(
                             np.float32(
@@ -179,13 +196,17 @@ class KinectWorker:
                         row_pixel = np.concatenate((row_pixel, column_pixel), axis=1)
                         color_row_pixel = np.concatenate((color_row_pixel, color_column_pixel), axis=1)
 
-                new_depth_index = row_pixel
-                subtracted = new_depth_index
-                cv2.imshow('color_row_pixel'.format(i), color_row_pixel)
+                row_pixel_list[i] = row_pixel.copy()
+                color_row_pixel_list[i] = color_row_pixel.copy()
 
-                _, new_depth_index = cv2.threshold(new_depth_index, 90, 255, cv2.THRESH_BINARY)
+                new_depth_list[i] = row_pixel.copy()
+                subtracted = new_depth_list[i]
+                cv2.imshow('color_row_pixel_{0}_{1}'.format(str(configure.clients[i][0]),
+                                                            str(configure.clients[i][1]), color_row_pixel_list[i]))
 
-                image = new_depth_index
+                _, new_depth_list[i] = cv2.threshold(new_depth_list[i], 90, 255, cv2.THRESH_BINARY)
+
+                image = new_depth_list[i]
 
                 image = image.astype(np.uint8)
 
@@ -216,8 +237,7 @@ class KinectWorker:
                                                        (0, 255, 0),
                                                        cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
-                cv2.imshow("key_points", im_with_key_points)
-                # self.detect_queue.put(im_with_key_points)
+                cv2.imshow("key_points_" + str(i), im_with_key_points)
 
             self.listener.release(frames)
 

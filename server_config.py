@@ -1,5 +1,4 @@
 import json
-import pickle
 import socket
 import struct  ## new
 from queue import Queue
@@ -7,55 +6,76 @@ from queue import Queue
 import cv2
 import numpy as np
 
-HOST = '127.0.0.1'
+MAX_DGRAM = 2 ** 16
+HOST = '192.168.0.103'
 PORT = 9000
+server_ip = '192.168.0.126'
+config_client_ip = '192.168.0.101'
+config_client_port = 8081
+server_port = 9003
+server_rev_port = 9002
+
+
+def dump_buffer(s):
+    """ Emptying buffer frame """
+    while True:
+        seg, addr = s.recvfrom(MAX_DGRAM)
+        print(seg[0])
+        if struct.unpack("B", seg[0:1])[0] == 1:
+            print("finish emptying buffer")
+            break
+
+
 while True:
     try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        ping_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        message = str.encode(json.dumps({'client_ip': HOST,
+                                         'client_port': PORT,
+                                         'config_client_ip': config_client_ip,
+                                         'config_client_port': config_client_port}))
+        ping_socket.sendto(message, (server_ip, server_port))
         print('Socket created')
 
         s.bind((HOST, PORT))
-        print('Socket bind complete')
-        s.listen(10)
         print('Socket now listening')
 
-        conn, addr = s.accept()
-
-        data = b""
-        payload_size = struct.calcsize(">L")
-        print("payload_size: {}".format(payload_size))
-        parameter_data = conn.recv(4096)
+        parameter_data, _ = s.recvfrom(4096)
         parameter = json.loads(parameter_data)
         grid_transforms = parameter['grid_transforms']
 
-        grid_size_x = parameter['grid_size_x']
-        grid_size_y = parameter['grid_size_y']
+        grid_size_list = parameter['grid_size_list']
+
         width = parameter['width']
         height = parameter['height']
 
-        number_point_x = grid_size_x + 1
-        number_point_y = grid_size_y + 1
+        item_width_list = []
+        item_height_list = []
+        for i in range(0, len(grid_transforms)):
+            item_width_list.append(int(width / grid_size_list[i][0]))
+            item_height_list.append(int(height / grid_size_list[i][1]))
 
-        item_width = int(width / grid_size_x)
-        item_height = int(height / grid_size_y)
         for i in range(0, len(grid_transforms)):
             grid_transform = np.asarray(grid_transforms[i])
             grid_transforms[i] = grid_transform
 
         current_index = 0
-        client_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
-        client_socket.connect(('192.168.0.125', 9000))
+        current_server_index = 0
+
+        client_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
 
         def change_warp_points(event, x, y, flags, param):
             global current_index
-            global number_point_x
-            global number_point_y
+            global grid_size_list
+            global grid_transforms
+            global current_server_index
             if event == cv2.EVENT_LBUTTONUP:
-                grid_transform[current_index] = [x, y]
-                np.savetxt("transform.txt", grid_transform)
+                grid_transforms[current_server_index][current_index] = [x, y]
+                np.savetxt("transform.txt", grid_transforms[current_server_index][current_index])
                 current_index = current_index + 1
-                current_index = current_index % (number_point_x * number_point_y)
+                current_index = current_index % ((grid_size_list[current_server_index][0] + 1)
+                                                 * (grid_size_list[current_server_index][1] + 1))
 
 
         cv2.namedWindow('ImageWindow')
@@ -63,80 +83,86 @@ while True:
 
         queue = Queue()
 
-
-        async def hello(websocket, path):
-            while True:
-                value = queue.get()
-                if value is not None:
-                    await websocket.send(value)
-
-
         # new_loop = asyncio.new_event_loop()
         # start_server = websockets.serve(hello, "localhost", 9000, loop=new_loop)
         # t = Thread(target=hello, args=(new_loop, start_server))
         # t.start()
-
+        data = b''
+        dump_buffer(s)
         while True:
-            while len(data) < payload_size:
-                print("Recv: {}".format(len(data)))
-                data += conn.recv(4096)
+            seg, addr = s.recvfrom(MAX_DGRAM)
+            if struct.unpack("B", seg[0:1])[0] > 1:
+                data += seg[1:]
+            else:
+                data += seg[1:]
+                frame = cv2.imdecode(np.fromstring(data, dtype=np.uint8), 1)
+                cv2.imshow('frame', frame)
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
+                data = b''
 
-            print("Done Recv: {}".format(len(data)))
-            packed_msg_size = data[:payload_size]
-            data = data[payload_size:]
-            msg_size = struct.unpack(">L", packed_msg_size)[0]
-            print("msg_size: {}".format(msg_size))
-            while len(data) < msg_size:
-                data += conn.recv(4096)
-            frame_data = data[:msg_size]
-            data = data[msg_size:]
+                cv2.imshow('ImageWindow', frame)
 
-            frame = pickle.loads(frame_data, fix_imports=True, encoding="bytes")
-            frame = cv2.imdecode(frame, cv2.IMREAD_COLOR)
-            cv2.imshow('ImageWindow', frame)
+                image = frame.copy()
 
-            image = frame.copy()
+                row_pixel = []
 
-            row_pixel = []
+                grid_transform = grid_transforms[current_server_index]
+                grid_size = grid_size_list[current_server_index]
+                item_width = item_width_list[current_server_index]
+                item_height = item_height_list[current_server_index]
+                for row in range(0, grid_size[0]):
+                    column_pixel = []
+                    for column in range(0, grid_size[1]):
+                        index1 = column * (grid_size[0] + 1) + row
+                        index2 = column * (grid_size[0] + 1) + row + 1
+                        index3 = (column + 1) * (grid_size[0] + 1) + row
+                        index4 = (column + 1) * (grid_size[0] + 1) + row + 1
 
-            for row in range(0, grid_size_x):
-                column_pixel = []
-                for column in range(0, grid_size_y):
-                    index1 = column * number_point_x + row
-                    index2 = column * number_point_x + row + 1
-                    index3 = (column + 1) * number_point_x + row
-                    index4 = (column + 1) * number_point_x + row + 1
+                        m2 = cv2.getPerspectiveTransform(
+                            np.float32(
+                                [(grid_transform[index1][0], grid_transform[index1][1]),
+                                 (grid_transform[index2][0], grid_transform[index2][1]),
+                                 (grid_transform[index3][0], grid_transform[index3][1]),
+                                 (grid_transform[index4][0], grid_transform[index4][1])]),
+                            np.float32(
+                                [(0, 0),
+                                 (item_width, 0),
+                                 (0, item_height),
+                                 (item_width, item_height)]
+                            ),
+                        )
+                        m2 = cv2.warpPerspective(image, m2, (item_width, item_height))
 
-                    m2 = cv2.getPerspectiveTransform(
-                        np.float32(
-                            [(grid_transform[index1][0], grid_transform[index1][1]),
-                             (grid_transform[index2][0], grid_transform[index2][1]),
-                             (grid_transform[index3][0], grid_transform[index3][1]),
-                             (grid_transform[index4][0], grid_transform[index4][1])]),
-                        np.float32(
-                            [(0, 0),
-                             (item_width, 0),
-                             (0, item_height),
-                             (item_width, item_height)]
-                        ),
-                    )
-                    m2 = cv2.warpPerspective(image, m2, (item_width, item_height))
+                        if column == 0:
+                            column_pixel = m2
+                        else:
+                            column_pixel = np.concatenate((column_pixel, m2), axis=0)
 
-                    if column == 0:
-                        column_pixel = m2
+                    if row == 0:
+                        row_pixel = column_pixel
                     else:
-                        column_pixel = np.concatenate((column_pixel, m2), axis=0)
+                        row_pixel = np.concatenate((row_pixel, column_pixel), axis=1)
 
-                if row == 0:
-                    row_pixel = column_pixel
-                else:
-                    row_pixel = np.concatenate((row_pixel, column_pixel), axis=1)
-
-            cv2.imshow('row_pixel', row_pixel)
-            key = cv2.waitKey(delay=1)
-            if key == ord('S'):
-                value = {'type': 'grid_transform', 'grid_transform': grid_transform.tolist()}
-                # queue.put(str.encode(json.dumps(value)))
-                client_socket.sendall(str.encode(json.dumps(value)))
+                cv2.imshow('row_pixel', row_pixel)
+                key = cv2.waitKey(delay=1)
+                # print("send success")
+                if key == ord('S'):
+                    value = {'type': 'grid_transform_client',
+                             'client_ip': config_client_ip,
+                             'client_port': config_client_port,
+                             'grid_transform': grid_transforms[current_server_index].tolist()}
+                    client_socket.sendto(str.encode(json.dumps(value)),
+                                         (server_ip, server_rev_port))
+                    print("send success")
+                if key == ord('='):
+                    current_index = 0
+                    current_server_index = current_server_index + 1
+                    current_server_index = current_server_index % len(grid_size_list[0])
+                if key == ord('-'):
+                    current_index = 0
+                    current_server_index = current_server_index - 1
+                    if current_server_index < 0:
+                        current_server_index = len(grid_size_list[0]) - 1
     except Exception as e:
         print(e)

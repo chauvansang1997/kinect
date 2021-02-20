@@ -24,15 +24,16 @@ class ConfigSendSocket(threading.Thread):
                 client_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
                 client_socket.connect((self.server_ip, self.port))
                 encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 90]
-                grid_transform = self.configure.grid_transform.tolist()
-                wrap_transform = self.configure.grid_transform.tolist()
+                grid_transforms = []
 
-                data = {'grid_transform': grid_transform, 'wrap_transform': wrap_transform,
-                        'grid_size_x': self.configure.grid_size_x,
-                        'grid_size_y': self.configure.grid_size_y,
+                for grid_transform in self.configure.grid_transforms:
+                    grid_transforms.append(grid_transform.tolist())
+
+                data = {'grid_transforms': grid_transforms,
+                        'grid_size_list_x': self.configure.grid_size_list_x,
+                        'grid_size_list_y': self.configure.grid_size_list_y,
                         'width': self.configure.width,
-                        'height': self.configure.height,
-                        }
+                        'height': self.configure.height}
                 client_socket.sendall(str.encode(json.dumps(data)))
                 while True:
                     try:
@@ -50,6 +51,7 @@ class ConfigSendSocket(threading.Thread):
                         client_socket.close()
             except Exception as e:
                 print(e)
+                client_socket.close()
 
     def run(self):
         self.send()
