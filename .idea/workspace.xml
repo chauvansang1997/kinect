@@ -1,21 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="156646bd-fecc-44d3-8876-7be1a6ec2dcd" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/mesh_server_config.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/udp_mesh_socket.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client_kinect.py" beforeDir="false" afterPath="$PROJECT_DIR$/client_kinect.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config_recv_socket.py" beforeDir="false" afterPath="$PROJECT_DIR$/config_recv_socket.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config_send_socket.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config_send_udp_socket.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/configure.py" beforeDir="false" afterPath="$PROJECT_DIR$/configure.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frame_segment_udp.py" beforeDir="false" afterPath="$PROJECT_DIR$/frame_segment_udp.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kinect_worker.py" beforeDir="false" afterPath="$PROJECT_DIR$/kinect_worker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sender.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/server_config.py" afterDir="false" />
-    </list>
+    <list default="true" id="156646bd-fecc-44d3-8876-7be1a6ec2dcd" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -526,7 +512,7 @@
       <workItem from="1613650642873" duration="12265000" />
       <workItem from="1613735184945" duration="4846000" />
       <workItem from="1613750122155" duration="1237000" />
-      <workItem from="1613777489224" duration="7115000" />
+      <workItem from="1613777489224" duration="7153000" />
     </task>
     <servers />
   </component>
