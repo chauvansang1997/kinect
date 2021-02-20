@@ -24,6 +24,7 @@ class KinectWorker:
         self.queues = configure.queues
         self.detect_queue = detect_queue
         self.image_queue = image_queue
+        self.mesh_queues = configure.mesh_queues
 
     def run(self):
         configure = self.configure
@@ -130,6 +131,41 @@ class KinectWorker:
             color_depth = self.registered.asarray(np.uint8)
             new_depth = self.first_depth - depth
 
+            if len(self.configure.mesh_clients) > 0:
+                mesh_depth = new_depth.copy()
+                _, mesh_depth = cv2.threshold(mesh_depth, 90, 255, cv2.THRESH_BINARY)
+
+                for i in range(0, len(self.configure.mesh_clients)):
+                    mesh_matrix = cv2.getPerspectiveTransform(self.configure.mesh_transforms[i],
+                                                              np.float32([[0, 0],
+                                                                          [512, 0],
+                                                                          [0, 424],
+                                                                          [512, 424]]))
+                    client_mesh_depth = cv2.warpPerspective(mesh_depth, mesh_matrix, (512, 424))
+                    client_mesh_depth = client_mesh_depth.astype(np.uint8)
+                    image = cv2.bilateralFilter(client_mesh_depth, 11, 17, 17)
+                    kernel = np.ones((self.kernel, self.kernel), np.uint8)
+                    image = cv2.morphologyEx(image, cv2.MORPH_OPEN, kernel)
+                    image = cv2.flip(image, 0)
+                    contours, hierarchy = cv2.findContours(image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+                    data = []
+
+                    drawing = np.zeros((image.shape[0], image.shape[1], 3), np.uint8)
+                    for j in range(len(contours)):
+                        current_area = cv2.contourArea(contours[j])
+                        if current_area >= self.area:
+                            epsilon = 0.01 * cv2.arcLength(contours[j], True)
+                            approx = cv2.approxPolyDP(contours[j], epsilon, True)
+                            data.append(approx.tolist())
+                            area = cv2.contourArea(contours[j])
+                            if (len(approx) > 8) & (area > 30):
+                                color_contours = (0, 255, 0)
+                                cv2.drawContours(drawing, [approx], -1, color_contours, 1)
+
+                    if len(data) > 0:
+                        self.configure.mesh_queues[i].put(json.dumps(data))
+
             if self.configure.reset:
                 grid_size_list = configure.grid_size_list
                 grid_transforms = configure.grid_transforms
@@ -139,7 +175,6 @@ class KinectWorker:
                 new_depth_list = []
                 color_row_pixel_list = []
                 row_pixel_list = []
-                cv2.destroyAllWindows()
                 for i in range(0, len(configure.clients)):
                     item_width_list.append(int(width / grid_size_list[i][0]))
                     item_height_list.append(int(height / grid_size_list[i][1]))
@@ -148,10 +183,6 @@ class KinectWorker:
                     color_row_pixel_list.append([])
                     row_pixel_list.append([])
                 self.configure.reset = False
-
-            if self.configure.update:
-                self.configure.update = False
-                grid_transforms = self.configure.grid_transforms
 
             self.image_queue.put(color_depth)
             for i in range(0, len(configure.clients)):

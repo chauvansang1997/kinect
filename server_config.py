@@ -33,7 +33,8 @@ while True:
         message = str.encode(json.dumps({'client_ip': HOST,
                                          'client_port': PORT,
                                          'config_client_ip': config_client_ip,
-                                         'config_client_port': config_client_port}))
+                                         'config_client_port': config_client_port,
+                                         'type': 'throw_ball'}))
         ping_socket.sendto(message, (server_ip, server_port))
         print('Socket created')
 

@@ -9,6 +9,7 @@ class ClientKinectSocket(threading.Thread):
         self.port = configure.data_port
         self.configure = configure
         self.send_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.send_mesh_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.manage_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
     def manage_socket(self):
@@ -18,16 +19,33 @@ class ClientKinectSocket(threading.Thread):
                 data, address = self.manage_sock.recvfrom(4096)
                 client_info = json.loads(data)
                 print(client_info)
-                self.configure.load_client_config((client_info['client_ip'],
-                                                   client_info['client_port']))
-                # self.send_sock.sendto(data, (client_info['client_ip'],
-                #                              client_info['client_port']))
+                if client_info['type'] == 'mesh':
+                    self.configure.mesh_clients.append((client_info['client_ip'],
+                                                        client_info['client_port']))
+                else:
+                    self.configure.load_client_config((client_info['client_ip'],
+                                                       client_info['client_port']))
             except Exception as e:
                 print(e)
 
     def run(self):
         manage_thread = threading.Thread(target=self.manage_socket)
         manage_thread.start()
+        send_grid_thread = threading.Thread(target=self.send_grid)
+        send_grid_thread.start()
+        self.send_mesh()
+
+    def send_mesh(self):
+        while True:
+            try:
+                for i in range(0, len(self.configure.mesh_clients)):
+                    data = self.configure.mesh_queues[i].get()
+                    if data is not None:
+                        self.send_mesh_sock.sendto(str.encode(data), self.configure.mesh_clients[i])
+            except Exception as e:
+                print(e)
+
+    def send_grid(self):
         while True:
             try:
                 for i in range(0, len(self.configure.clients)):

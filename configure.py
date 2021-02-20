@@ -37,7 +37,6 @@ class Configure:
             self.config_detect_port = int(self.config['server.com']['config_detect_port'])
             self.grid_size_list_x = self.config['server.com']['grid_size_list_x']
             self.grid_size_list_y = self.config['server.com']['grid_size_list_y']
-            # self.config_manage_send_port = int(self.config['server.com']['config_manage_send_port'])
             self.config_manage_config_port = int(self.config['server.com']['config_manage_config_port'])
             self.data_port = int(self.config['server.com']['data_port'])
             self.grid_size_list_x = self.grid_size_list_x.split(' ')
@@ -50,23 +49,22 @@ class Configure:
         self.width = 512
         self.height = 424
         self.clients = []
+        self.mesh_clients = []
         self.grid_size_list = []
         self.grid_size_list_x = []
         self.grid_size_list_y = []
         self.grid_transforms = []
         self.queues = []
+        self.mesh_queues = []
+        self.mesh_transforms = []
         try:
             self.first_depth = np.loadtxt("./configure/first_depth.txt", dtype=np.float32)
         except Exception as e:
             print(e)
             self.first_depth = None
 
-        self.update = False
         self.reset = False
-        self.updating = False
-        self.update_grid_size = False
-        self.update_grid_transform = False
-        self.update_wrap_transform = False
+        self.mesh_reset = False
 
     def write(self):
         if os.path.exists('config_kinect.ini') is False:
@@ -130,6 +128,33 @@ class Configure:
         except Exception as e:
             print(e)
 
+    def write_mesh_transform_client(self, client, mesh_transform_client):
+        try:
+            np.savetxt("./mesh_configure/mesh_transform_{0}_{1}.txt".
+                       format(client[0], client[1]),
+                       np.asarray(mesh_transform_client))
+            print('save mesh_transform success')
+            for i in range(0, len(self.mesh_clients)):
+                if self.mesh_clients[i] == client:
+                    print('reload mesh config')
+                    self.mesh_transforms[i] = mesh_transform_client
+                    break
+        except Exception as e:
+            print(e)
+
+    def get_mesh_client_config(self, client):
+        try:
+            mesh_transform_client = np.loadtxt("./mesh_configure/mesh_transform_{0}_{1}.txt".
+                                               format(client[0], str(client[1])),
+                                               dtype=np.float32)
+            return mesh_transform_client
+        except Exception as e:
+            print(e)
+            mesh_transform_client = np.float32([[0, 0], [512, 0], [0, 424], [512, 424]])
+            np.savetxt("./mesh_configure/mesh_transform_{0}_{1}.txt".
+                       format(client[0], str(client[1])), mesh_transform_client)
+            return mesh_transform_client
+
     def get_client_config(self, client):
         try:
             grid_transform_client = np.loadtxt("./configure/grid_transform_{0}_{1}.txt".
@@ -160,6 +185,24 @@ class Configure:
                        format(client[0], str(client[1])), np.asarray(grid_size))
 
             return grid_transform_client, grid_size
+
+    def load_mesh_config(self, client):
+        if client not in self.mesh_clients:
+            try:
+                mesh_transform_client = np.loadtxt("./mesh_configure/transform_{0}_{1}.txt".
+                                                   format(client[0], str(client[1])),
+                                                   dtype=np.float32)
+                self.mesh_transforms.append(mesh_transform_client)
+            except Exception as e:
+                print(e)
+                mesh_transform_client = np.float32([[0, 0], [512, 0], [0, 424], [512, 424]])
+                mesh_transform_client = np.float32([[0, 0], [512, 0], [0, 424], [512, 424]])
+                np.savetxt("./mesh_configure/mesh_transform_{0}_{1}.txt".
+                           format(client[0], str(client[1])), mesh_transform_client)
+                self.mesh_transforms.append(mesh_transform_client)
+            self.mesh_queues.append(Queue())
+            self.mesh_clients.append(client)
+            self.mesh_reset = True
 
     def load_client_config(self, client):
         if client not in self.clients:

@@ -40,6 +40,16 @@ class ConfigReceiveSocket(threading.Thread):
                                                                   grid_transform)
                         except Exception as e:
                             print(e)
+                    elif config['type'] == 'mesh_transform_client':
+                        try:
+                            client_ip = config['client_ip']
+                            client_port = config['client_port']
+                            mesh_transform = np.asarray(config['mesh_transform']
+                                                        , dtype=np.float32)
+                            self.configure.write_mesh_transform_client((client_ip, client_port),
+                                                                       mesh_transform)
+                        except Exception as e:
+                            print(e)
             except Exception as e:
                 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                 s.bind(('0.0.0.0', self.port))

@@ -53,13 +53,18 @@ class FrameSegment(threading.Thread):
                                  client_info['config_client_port'])
                 client_address = (client_info['client_ip'],
                                   client_info['client_port'])
+                if client_info['type'] == 'mesh':
+                    mesh_transform = self.configure.get_mesh_client_config(config_client)
+                    data = {'mesh_transform': [mesh_transform]}
+                    self.manage_sock.sendto(str.encode(json.dumps(data)), client_address)
+                else:
 
-                grid_transform, grid_size = self.configure.get_client_config(config_client)
-                data = {'grid_transforms': [grid_transform.tolist()],
-                        'grid_size_list': [grid_size.tolist()],
-                        'width': self.configure.width,
-                        'height': self.configure.height}
-                self.manage_sock.sendto(str.encode(json.dumps(data)), client_address)
+                    grid_transform, grid_size = self.configure.get_client_config(config_client)
+                    data = {'grid_transforms': [grid_transform.tolist()],
+                            'grid_size_list': [grid_size.tolist()],
+                            'width': self.configure.width,
+                            'height': self.configure.height}
+                    self.manage_sock.sendto(str.encode(json.dumps(data)), client_address)
             except Exception as e:
                 print(e)
 

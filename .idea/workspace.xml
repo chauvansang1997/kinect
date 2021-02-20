@@ -2,33 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="156646bd-fecc-44d3-8876-7be1a6ec2dcd" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/client_kinect.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config_send_udp_socket.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frame_segment_udp.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sender.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mesh_server_config.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/udp_mesh_socket.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base_grid_transform.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config_kinect.ini" beforeDir="false" afterPath="$PROJECT_DIR$/config_kinect.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client_kinect.py" beforeDir="false" afterPath="$PROJECT_DIR$/client_kinect.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config_recv_socket.py" beforeDir="false" afterPath="$PROJECT_DIR$/config_recv_socket.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config_send_socket.py" beforeDir="false" afterPath="$PROJECT_DIR$/config_send_socket.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config_server.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config_send_socket.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config_send_udp_socket.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/configure.py" beforeDir="false" afterPath="$PROJECT_DIR$/configure.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/first_depth.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grid_transform.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grid_transforms_8000.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grid_transforms_8001.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grid_transforms_8002.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kinect_server.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frame_segment_udp.py" beforeDir="false" afterPath="$PROJECT_DIR$/frame_segment_udp.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kinect_worker.py" beforeDir="false" afterPath="$PROJECT_DIR$/kinect_worker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_config.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sender.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/server_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/server_config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/transform.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/transform_worker.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/transform_worker2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/udp_client.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,6 +112,17 @@
     </key>
   </component>
   <component name="RunManager" selected="Python.server_config">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="PythonScript" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -529,7 +526,7 @@
       <workItem from="1613650642873" duration="12265000" />
       <workItem from="1613735184945" duration="4846000" />
       <workItem from="1613750122155" duration="1237000" />
-      <workItem from="1613777489224" duration="3765000" />
+      <workItem from="1613777489224" duration="7115000" />
     </task>
     <servers />
   </component>
@@ -562,7 +559,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="NONE" type="python-line">
           <url>file://$PROJECT_DIR$/kinect_worker.py</url>
-          <line>29</line>
+          <line>30</line>
           <log-expression expression="height = configure.height&#10;&#10;        grid_size_list = configure.grid_size_list&#10;        grid_transforms = configure.grid_transforms&#10;        item_width_list = []&#10;        item_height_list = []&#10;        color_pixel_list = []&#10;        new_depth_list = []&#10;        color_row_pixel_list = []&#10;        row_pixel_list = []&#10;        for i in range(0, len(configure.clients)):&#10;            item_width_list.append(int(width / grid_size_list[i][0]))&#10;            item_height_list.append(int(height / grid_size_list[i][1]))&#10;            color_pixel_list.append([])&#10;            new_depth_list.append([])&#10;            color_row_pixel_list.append([])&#10;            row_pixel_list.append([])" language="Python" />
           <option name="timeStamp" value="1" />
         </line-breakpoint>
