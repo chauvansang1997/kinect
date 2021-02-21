@@ -18,7 +18,7 @@ class ConfigDetectSocket(threading.Thread):
 
     def send(self):
         try:
-            self.queue.queue.clear()
+            self.queue.queues.clear()
             client_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
             client_socket.connect((self.server_ip, self.port))
             encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 90]

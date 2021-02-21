@@ -2,6 +2,7 @@ import json
 import socket
 import threading
 
+lock = threading.Lock()
 
 class ClientKinectSocket(threading.Thread):
     def __init__(self, configure):
@@ -17,16 +18,19 @@ class ClientKinectSocket(threading.Thread):
         while True:
             try:
                 data, address = self.manage_sock.recvfrom(4096)
+                lock.acquire()
                 client_info = json.loads(data)
-                print(client_info)
+                # print(client_info)
                 if client_info['type'] == 'mesh':
-                    self.configure.mesh_clients.append((client_info['client_ip'],
-                                                        client_info['client_port']))
+                    self.configure.load_mesh_config((client_info['client_ip'],
+                                                     client_info['client_port']))
                 else:
                     self.configure.load_client_config((client_info['client_ip'],
                                                        client_info['client_port']))
+                lock.release()
             except Exception as e:
                 print(e)
+                print('load data error')
 
     def run(self):
         manage_thread = threading.Thread(target=self.manage_socket)

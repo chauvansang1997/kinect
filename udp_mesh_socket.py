@@ -3,18 +3,17 @@ import threading
 
 
 class UdpMeshSocket(threading.Thread):
-    def __init__(self, queue, configure):
+    def __init__(self, configure):
         super().__init__()
         self.connected = set()
-        self.queue = queue
-        self.server_ip = configure.server_ip
-        self.port = configure.port
+        self.queues = configure.mesh_queues
+        self.configure = configure
 
     async def handler(self, websocket, path):
         self.connected.add(websocket)
         print('client connected')
         while True:
-            data = self.queue.get()
+            data = self.queues.get()
             for client in self.connected.copy():
                 await client.send(data)
 
@@ -23,9 +22,11 @@ class UdpMeshSocket(threading.Thread):
 
         while True:
             try:
-                data = self.queue.get()
-                if data is not None:
-                    udp_client_socket.sendto(str.encode(data), (self.server_ip, self.port))
+                for i in range(0, len(self.configure.mesh_queues)):
+                    data = self.configure.mesh_queues[i].get()
+                    if data is not None:
+                        udp_client_socket.sendto(str.encode(data), (self.configure.mesh_clients[i][0],
+                                                                    self.configure.mesh_clients[i][1]))
             except Exception as e:
                 print(e)
 

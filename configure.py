@@ -88,28 +88,40 @@ class Configure:
 
     def write_grid_size_client(self, client, grid_size):
         try:
+            old_grid_size = np.loadtxt("./configure/grid_size_{0}_{1}.txt".
+                                       format(client[0], str(client[1])),
+                                       dtype=np.int32)
+            old_grid_size = old_grid_size.tolist()
+            if old_grid_size[0] != grid_size[0] or old_grid_size[1] != grid_size[1]:
+                self.save_grid_size(client, grid_size)
+        except Exception as e:
+            print(e)
+            self.save_grid_size(client, grid_size)
+
+    def save_grid_size(self, client, grid_size):
+        try:
             np.savetxt("./configure/grid_size_{0}_{1}.txt".
                        format(client[0], str(client[1])), np.asarray(grid_size))
-            number_point_x = self.default_grid_size_x + 1
-            number_point_y = self.default_grid_size_y + 1
+            number_point_x = grid_size[0] + 1
+            number_point_y = grid_size[1] + 1
             grid_transform_client = []
             for i in range(0, number_point_x * number_point_y):
-                x = (i % number_point_x) * (self.width / self.default_grid_size_x)
+                x = (i % number_point_x) * (self.width / grid_size[0])
                 y = math.trunc(math.trunc(i / number_point_x) % number_point_y) * \
-                    (self.height / self.default_grid_size_y)
+                    (self.height / grid_size[1])
                 grid_transform_client.append([x, y])
             grid_transform_client = np.asarray(grid_transform_client)
-            self.grid_transforms.append(grid_transform_client)
-
             np.savetxt("./configure/grid_transform_{0}_{1}.txt".
                        format(client[0], client[1]),
                        grid_transform_client)
 
             for i in range(0, len(self.clients)):
                 if self.clients[i] == client:
-                    self.grid_size_list[i] = grid_size
+                    self.grid_size_list[i] = np.asarray(grid_size)
                     self.grid_transforms[i] = grid_transform_client
+                    self.reset = True
                     break
+
         except Exception as e:
             print(e)
 
@@ -146,7 +158,7 @@ class Configure:
         try:
             mesh_transform_client = np.loadtxt("./mesh_configure/mesh_transform_{0}_{1}.txt".
                                                format(client[0], str(client[1])),
-                                               dtype=np.float32)
+                                               dtype=np.int32)
             return mesh_transform_client
         except Exception as e:
             print(e)
@@ -157,13 +169,13 @@ class Configure:
 
     def get_client_config(self, client):
         try:
-            grid_transform_client = np.loadtxt("./configure/grid_transform_{0}_{1}.txt".
-                                               format(client[0], str(client[1])),
-                                               dtype=np.float32)
-            grid_size = np.loadtxt("./configure/grid_size_{0}_{1}.txt".
-                                   format(client[0], str(client[1])),
-                                   dtype=np.int32)
-            return grid_transform_client, grid_size
+            grid_transform = np.loadtxt("./configure/grid_transform_{0}_{1}.txt".
+                                        format(client[0], str(client[1])),
+                                        dtype=np.float32)
+            size = np.loadtxt("./configure/grid_size_{0}_{1}.txt".
+                              format(client[0], str(client[1])),
+                              dtype=np.int32)
+            return grid_transform, size
         except Exception as e:
             print(e)
             number_point_x = self.default_grid_size_x + 1
@@ -184,7 +196,7 @@ class Configure:
             np.savetxt("./configure/grid_size_{0}_{1}.txt".
                        format(client[0], str(client[1])), np.asarray(grid_size))
 
-            return grid_transform_client, grid_size
+            return grid_transform_client, np.asarray(grid_size)
 
     def load_mesh_config(self, client):
         if client not in self.mesh_clients:
@@ -196,7 +208,6 @@ class Configure:
             except Exception as e:
                 print(e)
                 mesh_transform_client = np.float32([[0, 0], [512, 0], [0, 424], [512, 424]])
-                mesh_transform_client = np.float32([[0, 0], [512, 0], [0, 424], [512, 424]])
                 np.savetxt("./mesh_configure/mesh_transform_{0}_{1}.txt".
                            format(client[0], str(client[1])), mesh_transform_client)
                 self.mesh_transforms.append(mesh_transform_client)
@@ -206,6 +217,7 @@ class Configure:
 
     def load_client_config(self, client):
         if client not in self.clients:
+
             try:
                 grid_transform_client = np.loadtxt("./configure/grid_transform_{0}_{1}.txt".
                                                    format(client[0], str(client[1])),
@@ -215,6 +227,7 @@ class Configure:
                                        format(client[0], str(client[1])),
                                        dtype=np.int32)
                 self.grid_size_list.append(grid_size.tolist())
+
             except Exception as e:
                 print(e)
                 number_point_x = self.default_grid_size_x + 1
@@ -234,10 +247,11 @@ class Configure:
 
                 grid_size = [self.default_grid_size_x,
                              self.default_grid_size_y]
-                self.grid_size_list.append(grid_size)
+                self.grid_size_list.append(np.asarray(grid_size))
                 np.savetxt("./configure/grid_size_{0}_{1}.txt".
                            format(client[0], str(client[1])), np.asarray(grid_size))
 
             self.queues.append(Queue())
             self.clients.append(client)
             self.reset = True
+            print('load client success' + str(client[1]))

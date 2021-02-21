@@ -9,12 +9,15 @@ import numpy as np
 MAX_DGRAM = 2 ** 16
 HOST = '192.168.0.103'
 PORT = 9000
-server_ip = '192.168.0.126'
+server_ip = '192.168.0.120'
 config_client_ip = '192.168.0.101'
-config_client_port = 8081
+config_client_port = 8092
 server_port = 9003
 server_rev_port = 9002
 
+
+# client_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+#
 
 def dump_buffer(s):
     """ Emptying buffer frame """
@@ -29,13 +32,13 @@ def dump_buffer(s):
 while True:
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        ping_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         message = str.encode(json.dumps({'client_ip': HOST,
                                          'client_port': PORT,
                                          'config_client_ip': config_client_ip,
                                          'config_client_port': config_client_port,
                                          'type': 'mesh'}))
-        ping_socket.sendto(message, (server_ip, server_port))
+        client_socket.sendto(message, (server_ip, server_port))
         print('Socket created')
 
         s.bind((HOST, PORT))
@@ -43,7 +46,7 @@ while True:
 
         parameter_data, _ = s.recvfrom(4096)
         parameter = json.loads(parameter_data)
-        mesh_transforms = parameter['mesh_transforms']
+        mesh_transforms = parameter['mesh_transform']
 
         for i in range(0, len(mesh_transforms)):
             mesh_transform = np.asarray(mesh_transforms[i])
@@ -52,7 +55,6 @@ while True:
         current_index = 0
         current_server_index = 0
 
-        client_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
         def change_warp_points(event, x, y, flags, param):
             global current_index
@@ -74,6 +76,9 @@ while True:
         dump_buffer(s)
         while True:
             seg, addr = s.recvfrom(MAX_DGRAM)
+            print(addr)
+            if addr[0] != server_ip:
+                continue
             if struct.unpack("B", seg[0:1])[0] > 1:
                 data += seg[1:]
             else:
@@ -87,19 +92,24 @@ while True:
                 cv2.imshow('ImageWindow', frame)
 
                 image = frame.copy()
-
+                image = image.astype(np.uint8)
                 row_pixel = []
 
                 mesh_transform = mesh_transforms[current_server_index]
+                M = cv2.getPerspectiveTransform(np.float32(
+                    [(mesh_transform[0]),
+                     (mesh_transform[1]),
+                     (mesh_transform[2]),
+                     (mesh_transform[3]),
+                     ]),
+                    np.float32([[0, 0],
+                                [512, 0],
+                                [0, 424],
+                                [512, 424]]))
 
-                M = cv2.getPerspectiveTransform(mesh_transform,
-                                                np.float32([[0, 0],
-                                                            [512, 0],
-                                                            [0, 424],
-                                                            [512, 424]]))
-                mesh_transform = cv2.warpPerspective(mesh_transform, M, (512, 424))
+                wrap = cv2.warpPerspective(image, M, (512, 424))
 
-                cv2.imshow('mesh_transform', mesh_transform)
+                cv2.imshow('mesh_transform', wrap)
                 key = cv2.waitKey(delay=1)
                 # print("send success")
                 if key == ord('S'):

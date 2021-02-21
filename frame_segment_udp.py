@@ -3,7 +3,6 @@ import math
 import socket
 import struct
 import threading
-
 import cv2
 
 
@@ -55,16 +54,18 @@ class FrameSegment(threading.Thread):
                                   client_info['client_port'])
                 if client_info['type'] == 'mesh':
                     mesh_transform = self.configure.get_mesh_client_config(config_client)
-                    data = {'mesh_transform': [mesh_transform]}
+                    data = {'mesh_transform': [mesh_transform.tolist()]}
                     self.manage_sock.sendto(str.encode(json.dumps(data)), client_address)
                 else:
-
+                    self.configure.write_grid_size_client(config_client, client_info['grid_size'])
                     grid_transform, grid_size = self.configure.get_client_config(config_client)
                     data = {'grid_transforms': [grid_transform.tolist()],
                             'grid_size_list': [grid_size.tolist()],
                             'width': self.configure.width,
                             'height': self.configure.height}
                     self.manage_sock.sendto(str.encode(json.dumps(data)), client_address)
+                if client_address not in self.clients:
+                    self.clients.append(client_address)
             except Exception as e:
                 print(e)
 

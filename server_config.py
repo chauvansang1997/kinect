@@ -9,11 +9,22 @@ import numpy as np
 MAX_DGRAM = 2 ** 16
 HOST = '192.168.0.103'
 PORT = 9000
-server_ip = '192.168.0.126'
+server_ip = '192.168.0.123'
 config_client_ip = '192.168.0.101'
-config_client_port = 8081
+config_client_port = 8085
 server_port = 9003
 server_rev_port = 9002
+grid_size = [3, 1]
+
+value = {'type': 'grid_size_client',
+         'client_ip': config_client_ip,
+         'client_port': config_client_port,
+         'grid_size': grid_size}
+client_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+
+
+# client_socket.sendto(str.encode(json.dumps(value)),
+#                      (server_ip, server_rev_port))
 
 
 def dump_buffer(s):
@@ -34,7 +45,8 @@ while True:
                                          'client_port': PORT,
                                          'config_client_ip': config_client_ip,
                                          'config_client_port': config_client_port,
-                                         'type': 'throw_ball'}))
+                                         'type': 'throw_ball', 'grid_size': grid_size}))
+
         ping_socket.sendto(message, (server_ip, server_port))
         print('Socket created')
 
@@ -63,8 +75,8 @@ while True:
         current_index = 0
         current_server_index = 0
 
-        client_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
+        # client_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
         def change_warp_points(event, x, y, flags, param):
             global current_index
@@ -92,6 +104,9 @@ while True:
         dump_buffer(s)
         while True:
             seg, addr = s.recvfrom(MAX_DGRAM)
+            print(addr)
+            if addr[0] != server_ip:
+                continue
             if struct.unpack("B", seg[0:1])[0] > 1:
                 data += seg[1:]
             else:
