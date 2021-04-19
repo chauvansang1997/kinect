@@ -4,7 +4,7 @@ import struct  ## new
 
 import cv2
 
-HOST = '192.168.0.102'
+HOST = '192.168.0.110'
 PORT = 9001
 while True:
     try:

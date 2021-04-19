@@ -7,7 +7,7 @@ import cv2
 import numpy as np
 
 MAX_DGRAM = 2 ** 16
-HOST = '192.168.0.103'
+HOST = '192.168.0.110'
 PORT = 9000
 server_ip = '192.168.0.120'
 config_client_ip = '192.168.0.101'

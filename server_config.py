@@ -7,11 +7,11 @@ import cv2
 import numpy as np
 
 MAX_DGRAM = 2 ** 16
-HOST = '192.168.0.103'
+HOST = '192.168.0.110'
 PORT = 9000
 server_ip = '192.168.0.123'
 config_client_ip = '192.168.0.101'
-config_client_port = 8085
+config_client_port = 8089
 server_port = 9003
 server_rev_port = 9002
 grid_size = [3, 1]

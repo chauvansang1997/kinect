@@ -190,7 +190,7 @@ class KinectWorker:
                 detect_thread = threading.Thread(target=detect_blob, args=(self, new_depth.copy()))
                 detect_thread.start()
 
-            self.image_queue.put(color_depth)
+            # self.image_queue.put(color_depth)
 
             self.listener.release(frames)
 
@@ -278,7 +278,8 @@ def detect_blob(self, new_depth):
             key_points = self.detector.detect(image)
             values = []
             for keypoint in key_points:
-                if subtracted[int(keypoint.pt[1])][int(keypoint.pt[0])] <= self.min_depth:
+                if subtracted[int(keypoint.pt[1])][int(keypoint.pt[0])] <= self.min_depth and\
+                        keypoint.size > 10:
                     value = {'y': keypoint.pt[1],
                              'x': self.configure.width - keypoint.pt[0],
                              'size': keypoint.size}
